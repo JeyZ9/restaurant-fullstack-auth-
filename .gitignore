@@ -12,8 +12,8 @@
 Thumbs.db
 
 # Environment files
-**/.env
-**/.env.*  # เช่น .env.development, .env.production
+# **/.env
+# **/.env.*  # เช่น .env.development, .env.production
 
 # IDE settings
 .vscode/

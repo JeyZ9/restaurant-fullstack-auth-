@@ -11,7 +11,7 @@ services:
     command: nodemon --legacy-watch index.js
     restart: always
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/app_db
+      - DATABASE_URL=postgresql://postgres:postgres@db:5433/app_db
       - HOST=db
       - USER=postgres
       - PASSWORD=postgres
