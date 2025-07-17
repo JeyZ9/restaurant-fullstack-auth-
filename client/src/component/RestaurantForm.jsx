@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router';
 
 const RestaurantForm = (props) => {
-  const { setPopup, addRestaurant } = props;
+  const { setPopup, addRestaurant, getRestaurants } = props;
 
   const [ restaurant, setRestaurant ] = useState({
     title: "",
@@ -12,12 +12,9 @@ const RestaurantForm = (props) => {
   });
 
   const { id } = useParams();
-
-  console.log(typeof(id));
-
     const updateRestaurant = async (id, data) => {
       const response = await axios.put(
-        `http://localhost:8080/restaurants/${id}`,
+        `http://localhost:5000/api/v1/restaurants/${id}`,
         data
       );
       return response.data;
@@ -27,7 +24,7 @@ const RestaurantForm = (props) => {
       const getById = async (id) => {
         try {
           const response = await axios.get(
-            `http://localhost:8080/restaurants/${id}`
+            `http://localhost:5000/api/v1/restaurants/${id}`
           );
           setRestaurant(response.data);
         } catch (error) {
@@ -43,6 +40,13 @@ const RestaurantForm = (props) => {
     }else{
       addRestaurant(restaurant);
     }
+    getRestaurants();
+    setPopup(false);
+    setRestaurant({
+      title: "",
+      type: "",
+      img: "",
+    });
   }
 
   const hanblechange = (e) => {
@@ -92,18 +96,25 @@ const RestaurantForm = (props) => {
         <div className="grid grid-cols-2 gap-2 justify-between mt-4">
           <button
             className="btn btn-error btn-outline w-full"
-            onClick={() => setPopup(false)}
+            onClick={() => {
+              setPopup(false);
+              setRestaurant({
+                title: "",
+                type: "",
+                img: "",
+              });
+            }}
           >
             cancel
           </button>
-          <Link
-            to={`/`}
-            onClick={hanbleOnClick}
+          <button
+            // to={`/`}
             type="submit"
+            onClick={hanbleOnClick}
             className="btn btn-accent w-full text-white"
           >
             {id ? "Update" : "Add"}
-          </Link>
+          </button>
         </div>
       </fieldset>
     </>

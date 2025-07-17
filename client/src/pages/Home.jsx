@@ -13,22 +13,33 @@ const Home = () => {
   const [ popup, setPopup ] = useState(false);
 
   const addRestaurant = async (data) => {
-    const response = await axios.post("http://localhost:8080/restaurants", data);
+    const response = await axios.post(
+      "http://localhost:5000/api/v1/restaurants",
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return response.data
   }
 
-  useEffect(() => {
-    // get all restaurants
-    fetch("http://localhost:8080/restaurants").then((res) => {
-      return res.json();
-    }).then((response) => {
-      setRestaurant(response);
-      setFilRestaurants(response);
-    }).catch((err) => {
-      console.log(err.message);
-    })
+  const getRestaurants = () => {
+    fetch("http://localhost:5000/api/v1/restaurants")
+      .then((res) => res.json())
+      .then((response) => {
+        setRestaurant(response);
+        setFilRestaurants(response);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
-  }, [])
+  useEffect(() => {
+    getRestaurants();
+  }, []);
 
   const handleSearch = (keyword) => {
 
@@ -96,7 +107,11 @@ const Home = () => {
 
       {popup && (
         <div className="fixed w-screen h-screen bg-[#909090]/50 z-1 left-0 top-0 flex justify-center items-center">
-          <RestaurantForm setPopup={setPopup} addRestaurant={addRestaurant} />
+          <RestaurantForm
+            setPopup={setPopup}
+            addRestaurant={addRestaurant}
+            getRestaurants={getRestaurants}
+          />
         </div>
       )}
 

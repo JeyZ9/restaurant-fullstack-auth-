@@ -29,7 +29,7 @@ const Restaurant = (props) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const response = await axios.delete(
-        `http://localhost:8080/restaurants/${id}`
+        `http://localhost:5000/api/v1/restaurants/${id}`
       );
       return response.data;
     }

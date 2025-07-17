@@ -89,7 +89,7 @@ restaurantController.update = async (req, res) => {
     { title, type, img },
     { where: { id: id } }
   ).then((num) => {
-    if(num == 1) {
+    if(num[0] === 1) {
       res.send({ message: "Updated success!" });
     }else {
       res.status(404).send({ message: `Cannot update restaurant with id: ${id}. Maybe restaurant not found.` })
@@ -107,7 +107,7 @@ restaurantController.deleted = async (req, res) => {
   const id = req.params.id;
   await Restaurant.destroy({ where: { id: id } })
     .then((num) => {
-      if (num == 1) {
+      if (num[0] === 1) {
         res.send({ message: "Deleted success!" });
       } else {
         res
