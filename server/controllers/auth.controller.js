@@ -1,4 +1,5 @@
 import db from "../models/index.js";
+import config from "../config/auth.config.js"
 
 const User = db.User;
 const Role = db.Role;
@@ -36,7 +37,7 @@ authController.Register = async (req, res) => {
             username: username,
             fullName: fullName,
             email: email,
-            password: password,
+            password: bcrypt.hashSync(password, 8),
         };
 
         User.create(newUser).then((user) => {
@@ -67,6 +68,64 @@ authController.Register = async (req, res) => {
             });
         });
     });
+}
+
+authController.login = async (req, res) => {
+    const { username, password } = req.body;
+
+    if(!username || !password) {
+        res.status(400).send({
+            message: "Username or password are missing!"
+        })
+        return;
+    }
+
+    await User.findOne({ where: { username: username } })
+      .then((user) => {
+        if (!user) {
+          res.status(404).send({
+            message: `User not found by username: ${username}`,
+          });
+          return;
+        }
+
+        const passwordIsValid = bcrypt.compareSync(password, user.password);
+        if (!passwordIsValid) {
+          res.status(401).send({
+            message: "Invalid password",
+          });
+          return;
+        }
+        // Vlid User
+        const token = jwt.sign({ username: user.username }, config.secret, {
+          expiresIn: 86400, // 60sec * 60min * 24h = 86400
+        });
+
+        const authorities = [];
+        user.getRoles().then((roles) => {
+          for (let i = 0; i < roles.length; i++) {
+            const role = `ROLE_${roles[i].roleName.toUpperCase()}`;
+            // console.log("roles: ", role);
+            authorities.push(role);
+          }
+          res.send({
+            token: token,
+            authorities: authorities,
+            userInfo: {
+              username: user.username,
+              fullName: user.fullName,
+              email: user.email,
+            },
+          });
+        });
+      }).catch((err) => {
+        res.status(500).send({
+          message: err.message || "Something this worng while login",
+        });
+      });
+
+
+
 }
 
 export default authController;

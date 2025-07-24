@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router"
 
 const Navbar = (props) => {
   const { setPopup } = props;
@@ -78,8 +79,8 @@ const Navbar = (props) => {
         </ul>
       </div>
       <div className="navbar-end">
-        <button className="btn btn-outline btn-primary mx-2">Register</button>
-        <button className="btn btn-outline btn-accent mx-2">Login</button>
+        <Link to={'/register'} className="btn btn-outline btn-primary mx-2">Register</Link>
+        <Link to={'/login'} className="btn btn-outline btn-accent mx-2">Login</Link>
       </div>
     </div>
   );
