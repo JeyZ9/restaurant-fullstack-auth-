@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import axios from 'axios';
+import { Link } from 'react-router';
 
 const Register = () => {
 
@@ -16,7 +18,7 @@ const Register = () => {
     })
 
     const registerUserApi = async (user) => {
-        const response = await axios.post(`http://localhost:5173/api/v1/register`, user);
+        const response = await axios.post(`http://localhost:5000/api/v1/register`, user);
         return response.data
     }
 
@@ -26,7 +28,8 @@ const Register = () => {
     };
 
     const handleSubmit = () => {
-        setRegisUser(regisUser);
+        // setRegisUser(regisUser);
+        registerUserApi(regisUser);
         setRegisUser({
           username: "",
           fullName: "",
@@ -37,7 +40,7 @@ const Register = () => {
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <form className="max-w-sm mx-auto">
+      <form className="max-w-sm mx-auto" method='POST'>
         <div className="mb-5">
           <label
             htmlFor="username"
@@ -170,6 +173,8 @@ const Register = () => {
         </div>
         <button
           type="submit"
+          // to={`/login`}
+          onClick={() => handleSubmit}
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           Register new account
