@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router';
+import RestaurantService from '../services/restaurant.service';
 
 const RestaurantForm = (props) => {
   const { setPopup, addRestaurant, getRestaurants } = props;
@@ -13,26 +14,25 @@ const RestaurantForm = (props) => {
 
   const { id } = useParams();
     const updateRestaurant = async (id, data) => {
-      const response = await axios.put(
-        `http://localhost:5000/api/v1/restaurants/${id}`,
-        data
-      );
-      return response.data;
+      // const response = await axios.put(
+      //   `http://localhost:5000/api/v1/restaurants/${id}`,
+      //   data
+      // );
+      // return response.data;
+      const response = await RestaurantService.updateRestaurant(id, data)
     };
 
   useEffect(() => {
       const getById = async (id) => {
         try {
-          const response = await axios.get(
-            `http://localhost:5000/api/v1/restaurants/${id}`
-          );
+          const response = await RestaurantService.getRestaurantById(id);
           setRestaurant(response.data);
         } catch (error) {
           console.error("Error ", error);
         }
       };
       getById(id);
-  }, [id])
+  }, [])
 
   const hanbleOnClick = () => {
     if(id !== undefined) {
