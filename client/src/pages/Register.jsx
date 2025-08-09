@@ -1,8 +1,13 @@
-import React, { useState } from 'react'
-import axios from 'axios';
-import { Link } from 'react-router';
+import { useState } from 'react'
+import AuthService from './../services/auth.service';
+import Swal from 'sweetalert2';
+
+import { useNavigate } from "react-router-dom"
 
 const Register = () => {
+
+    const navigate = useNavigate();
+
 
     const [isShow, setIsShow] = useState({ 
             password: false, 
@@ -14,29 +19,55 @@ const Register = () => {
         username: "",
         fullName: "",
         email: "",
-        password: ""
+        password: "",
+        confirmPass: ""
     })
 
     const registerUserApi = async (user) => {
-        const response = await axios.post(`http://localhost:5000/api/v1/register`, user);
+        const response = await AuthService.register(user);
         return response.data
     }
 
-    const hanblechange = (e) => {
+    const hanbleChange = (e) => {
       const { name, value } = e.target;
       setRegisUser({ ...regisUser, [name]: value });
     };
 
-    const handleSubmit = () => {
-        // setRegisUser(regisUser);
-        registerUserApi(regisUser);
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      if (regisUser.confirmPass !== regisUser.password) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Passwords do not match.",
+        });
+        return;
+      }
+
+      try {
+        await registerUserApi(regisUser);
+        Swal.fire({
+          icon: "success",
+          title: "Registration successful!",
+        });
         setRegisUser({
           username: "",
           fullName: "",
           email: "",
           password: "",
+          confirmPass: "",
         });
-    }
+        navigate("/login");
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Registration failed",
+          text: error.response?.data?.message || "An error occurred.",
+        });
+      }
+    };
+
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -53,7 +84,7 @@ const Register = () => {
             id="username"
             name="username"
             value={regisUser.username}
-            onChange={hanblechange}
+            onChange={hanbleChange}
             className="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
             placeholder="ex.Jeyer"
             required
@@ -71,7 +102,7 @@ const Register = () => {
             id="fullName"
             name="fullName"
             value={regisUser.fullName}
-            onChange={hanblechange}
+            onChange={hanbleChange}
             className="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
             placeholder="ex.wisarut saelao"
             required
@@ -89,7 +120,7 @@ const Register = () => {
             id="email"
             name="email"
             value={regisUser.email}
-            onChange={hanblechange}
+            onChange={hanbleChange}
             className="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
             placeholder="ex.example@gmail.com"
             required
@@ -107,7 +138,7 @@ const Register = () => {
             id="password"
             name="password"
             value={regisUser.password}
-            onChange={hanblechange}
+            onChange={hanbleChange}
             className="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
             required
           />
@@ -125,14 +156,17 @@ const Register = () => {
         </div>
         <div className="mb-5">
           <label
-            htmlFor="repeat-password"
+            htmlFor="confirmPass"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Confirm password
           </label>
           <input
             type={`${isShow.confirmPass ? "text" : "password"}`}
-            id="repeat-password"
+            id="confirmPass"
+            name='confirmPass'
+            value={regisUser.confirmPass}
+            onChange={hanbleChange}
             className="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
             required
           />
@@ -174,7 +208,7 @@ const Register = () => {
         <button
           type="submit"
           // to={`/login`}
-          onClick={() => handleSubmit}
+          onClick={(e) => handleSubmit(e)}
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           Register new account

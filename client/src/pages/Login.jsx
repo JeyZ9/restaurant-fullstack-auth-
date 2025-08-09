@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
-import axios from 'axios';
-import { Link } from 'react-router';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import AuthService from '../services/auth.service';
 
 const Login = () => {
+
+  const navigate = useNavigate("/");
 
     const [isShow, setIsShow] = useState({ 
             password: false, 
@@ -14,27 +17,53 @@ const Login = () => {
         password: ""
     })
 
-    const loginUserApi = async (user) => {
-        const response = await axios.post(`http://localhost:5000/api/v1/login`, user);
-        return response.data
-    }
+    // const loginUserApi = async (user) => {
+    //     const response = await AuthService.login(user);
+    //     return response.data
+    // }
 
     const hanblechange = (e) => {
       const { name, value } = e.target;
-      setRegisUser({ ...regisUser, [name]: value });
+      setLoginUser({ ...loginUser, [name]: value });
     };
 
-    const handleSubmit = () => {
-        // setRegisUser(regisUser);
-        const login = loginUserApi(regisUser);
-        if(login){
-            console.log("login success!");
-            setLoginUser({
-                username: "",
-                password: "",
-            });
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        const login = await AuthService.login(loginUser);
+
+        console.log("LOGIN:", login);
+
+        if (login?.token) {
+          Swal.fire({
+            icon: "success",
+            title: "Login successful!",
+          });
+
+          localStorage.setItem("token", login.token);
+
+          navigate("/");
+
+          setLoginUser({
+            username: "",
+            password: "",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Login failed!",
+            text: "Invalid username or password",
+          });
         }
-    }
+      } catch (error) {
+        console.error("Login error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error!",
+          text: error.response?.data?.message || "Something went wrong",
+        });
+      }
+    };
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -88,7 +117,7 @@ const Login = () => {
         <button
           type="submit"
           // to={`/login`}
-          onClick={() => handleSubmit}
+          onClick={(e) => handleSubmit(e)}
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full"
         >
           Login

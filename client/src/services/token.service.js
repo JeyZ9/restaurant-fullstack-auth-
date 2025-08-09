@@ -17,12 +17,17 @@ const removeUser = () => {
     localStorage.removeItem("user");
 };
 
+const removeToken = () => {
+    localStorage.removeItem("token");
+}
+
 // สร้าง object สำหรับ return function
 const TokenService = {
     getUser,
     setUser,
     getLocalAccessToken,
-    removeUser
+    removeUser,
+    removeToken
 }
 
 export default TokenService;

@@ -24,6 +24,7 @@ const Home = () => {
     //   }
     // );
     // return response.data
+    // const
     RestaurantService.addRestaurant(data);
   }
 

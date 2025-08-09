@@ -1,7 +1,8 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router';
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router';
 import RestaurantService from '../services/restaurant.service';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const RestaurantForm = (props) => {
   const { setPopup, addRestaurant, getRestaurants } = props;
@@ -12,6 +13,8 @@ const RestaurantForm = (props) => {
     img: ""
   });
 
+  const navigate = useNavigate();
+
   const { id } = useParams();
     const updateRestaurant = async (id, data) => {
       // const response = await axios.put(
@@ -19,7 +22,8 @@ const RestaurantForm = (props) => {
       //   data
       // );
       // return response.data;
-      const response = await RestaurantService.updateRestaurant(id, data)
+      const response = await RestaurantService.updateRestaurant(id, data);
+      return response.data;
     };
 
   useEffect(() => {
@@ -32,26 +36,55 @@ const RestaurantForm = (props) => {
         }
       };
       getById(id);
-  }, [])
+  }, [id])
 
-  const hanbleOnClick = () => {
-    if(id !== undefined) {
-      updateRestaurant(id, restaurant);
-    }else{
-      addRestaurant(restaurant);
+  const handleOnClick = (action) => {
+    try{
+      if(action == 1) {
+        updateRestaurant(id, restaurant);
+        Swal.fire({
+          icon: "success",
+          title: "Update restaurant successful!",
+        });
+        navigate("/");
+      }else if(action == 2){
+        addRestaurant(restaurant);
+        Swal.fire({
+          icon: "success",
+          title: "Add restaurant successful!",
+        });
+        navigate("/");
+      }
+      getRestaurants();
+      setPopup(false);
+      setRestaurant({
+        title: "",
+        type: "",
+        img: "",
+      });
+    }catch(err) {
+      Swal.fire({
+          icon: "error",
+          title: "Registration failed",
+          text: err.response?.data?.message || "An error occurred.",
+        });
     }
-    getRestaurants();
+  }
+
+  const handlechange = (e) => {
+    const { name, value } = e.target;
+    setRestaurant({ ...restaurant, [name]: value });
+  }
+
+  const handleCancle = (e) => {
+    e.preventDefault();
     setPopup(false);
     setRestaurant({
       title: "",
       type: "",
       img: "",
     });
-  }
-
-  const hanblechange = (e) => {
-    const { name, value } = e.target;
-    setRestaurant({ ...restaurant, [name]: value });
+    navigate("/");
   }
 
   return (
@@ -66,7 +99,7 @@ const RestaurantForm = (props) => {
           name="title"
           className="input"
           placeholder="restaurant title"
-          onChange={hanblechange}
+          onChange={handlechange}
           required
         />
 
@@ -77,7 +110,7 @@ const RestaurantForm = (props) => {
           name="type"
           className="input"
           placeholder="restaurant type"
-          onChange={hanblechange}
+          onChange={handlechange}
           required
         />
 
@@ -89,28 +122,21 @@ const RestaurantForm = (props) => {
           name="img"
           className="input"
           placeholder="image"
-          onChange={hanblechange}
+          onChange={handlechange}
           required
         />
 
         <div className="grid grid-cols-2 gap-2 justify-between mt-4">
           <button
             className="btn btn-error btn-outline w-full"
-            onClick={() => {
-              setPopup(false);
-              setRestaurant({
-                title: "",
-                type: "",
-                img: "",
-              });
-            }}
+            onClick={(e) => handleCancle(e)}
           >
             cancel
           </button>
           <button
             // to={`/`}
             type="submit"
-            onClick={hanbleOnClick}
+            onClick={() => handleOnClick(id ? 1 : 2)}
             className="btn btn-accent w-full text-white"
           >
             {id ? "Update" : "Add"}
