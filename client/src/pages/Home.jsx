@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import Navbar from '../component/Navbar'
 import Restaurant from '../component/Restaurant';
 import RestaurantForm from '../component/RestaurantForm';
-import axios from 'axios';
+import RestaurantService from '../services/restaurant.service';
+import Swal from "sweetalert2";
 // import axios from 'axios';
 // import Card from '../component/Card'
 
@@ -13,28 +14,37 @@ const Home = () => {
   const [ popup, setPopup ] = useState(false);
 
   const addRestaurant = async (data) => {
-    const response = await axios.post(
-      "http://localhost:5000/api/v1/restaurants",
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data
+    // const response = await axios.post(
+    //   "http://localhost:5000/api/v1/restaurants",
+    //   data,
+    //   {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
+    // return response.data
+    // const
+    RestaurantService.addRestaurant(data);
   }
 
-  const getRestaurants = () => {
-    fetch("http://localhost:5000/api/v1/restaurants")
-      .then((res) => res.json())
-      .then((response) => {
-        setRestaurant(response);
-        setFilRestaurants(response);
-      })
-      .catch((err) => {
-        console.log(err.message);
+  const getRestaurants = async () => {
+    try {
+      const response = await RestaurantService.getAllRestaurant();
+      console.log("DATA:", response);
+      if (response.status == 200) {
+        setRestaurant(response.data);
+        setFilRestaurants(response.data);
+      } else {
+        throw new Error("Failed to fetch restaurants");
+      }
+    } catch {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
       });
+    }
   };
 
   useEffect(() => {
