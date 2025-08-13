@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_AUT_API;
 
 const register = async(user) => {
     return await api.post(`${API_URL}/register`, user);
-};0
+};
 
 const login = async (user) => {
     const response = await api.post(`${API_URL}/login`, user);
