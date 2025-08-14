@@ -17,12 +17,13 @@ const Card = (props) => {
           </h2>
           <p>{type}</p>
           <div className="card-actions justify-end">
-            <button
+            <Link
+              to={`/delete`}
               className="btn btn-outline btn-error"
               onClick={() => deleteRestaurant(id)}
             >
               Delete
-            </button>
+            </Link>
             <Link
               to={`/update/${id}`}
               onClick={() => setPopup(true)}

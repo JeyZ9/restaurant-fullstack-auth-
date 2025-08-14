@@ -13,8 +13,12 @@ const router = createBrowserRouter([
     path: "/update/:id",
     element: <Home />,
   },
-    {
+  {
     path: "/add",
+    element: <Home />,
+  },
+  {
+    path: "/delete",
     element: <Home />,
   },
   {

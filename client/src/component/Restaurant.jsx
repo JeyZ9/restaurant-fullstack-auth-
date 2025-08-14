@@ -1,11 +1,11 @@
 import Card from "./Card";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Restaurant = (props) => {
   const { restaurants, setEdit, setPopup } = props;
-
-  console.log(restaurants);
+  const navigate = useNavigate();
 
   const deleteRestaurant = async (id) => {
     const result = await Swal.fire({
@@ -24,7 +24,7 @@ const Restaurant = (props) => {
         text: "Your file has been deleted.",
         icon: "success",
       });
-
+      navigate("/");
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const response = await axios.delete(
