@@ -21,7 +21,7 @@ const login = async (user) => {
 
 const logout = () => {
     TokenService.removeUser();
-    TokenService.removeToken();
+    // TokenService.removeToken();
 }
 
 const AuthService = {

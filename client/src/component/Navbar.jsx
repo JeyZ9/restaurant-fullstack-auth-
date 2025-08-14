@@ -1,13 +1,14 @@
-import React from "react";
 import { Link } from "react-router"
 import AuthService from "../services/auth.service";
 import { useNavigate } from 'react-router-dom';
+import UserInfo from "./UserInfo"
 
 const Navbar = (props) => {
   const { setPopup } = props;
 
-  const token = localStorage.getItem("token");
-  const navigate = useNavigate();
+
+  // const token = localStorage.getItem("token");
+
   const menuItems = [
     {
       id: 1,
@@ -30,12 +31,6 @@ const Navbar = (props) => {
     if(String(id) === "1") {
       setPopup(true);
     }
-  }
-
-  const handleLogOut = (e) => {
-    e.preventDefault();
-    AuthService.logout();
-    navigate("/login");
   }
 
   return (
@@ -91,25 +86,7 @@ const Navbar = (props) => {
           ))}
         </ul>
       </div>
-      {!token ? (
-        <div className="navbar-end">
-          <Link to={"/register"} className="btn btn-outline btn-primary mx-2">
-            Register
-          </Link>
-          <Link to={"/login"} className="btn btn-outline btn-accent mx-2">
-            Login
-          </Link>
-        </div>
-      ) : (
-        <div className="navbar-end">
-          <button
-            onClick={(e) => handleLogOut(e)}
-            className="btn btn-outline btn-primary mx-2"
-          >
-            Logout
-          </button>
-        </div>
-      )}
+      <UserInfo />
     </div>
   );
 };
