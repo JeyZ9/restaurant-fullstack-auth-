@@ -74,30 +74,40 @@ const Navbar = (props) => {
             ))}
           </ul>
         </div>
-        <a href="/" className="btn btn-ghost text-xl">Grab restaurant</a>
+        <a href="/" className="btn btn-ghost text-xl">
+          Grab restaurant
+        </a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           {menuItems.map((item) => (
             <ul key={item.id} className="flex gap-2">
               <li>
-                <button onClick={() => handleOnClick(item.id)}>
+                <Link to={item.url} onClick={() => handleOnClick(item.id)}>
                   {item.name}
-                </button>
+                </Link>
               </li>
             </ul>
           ))}
         </ul>
       </div>
-      {!token ? ( 
+      {!token ? (
         <div className="navbar-end">
-          <Link to={'/register'} className="btn btn-outline btn-primary mx-2">Register</Link>
-          <Link to={'/login'} className="btn btn-outline btn-accent mx-2">Login</Link>
+          <Link to={"/register"} className="btn btn-outline btn-primary mx-2">
+            Register
+          </Link>
+          <Link to={"/login"} className="btn btn-outline btn-accent mx-2">
+            Login
+          </Link>
         </div>
-      ):
-      (
+      ) : (
         <div className="navbar-end">
-          <button onClick={(e) => handleLogOut(e)} className="btn btn-outline btn-primary mx-2">Logout</button>
+          <button
+            onClick={(e) => handleLogOut(e)}
+            className="btn btn-outline btn-primary mx-2"
+          >
+            Logout
+          </button>
         </div>
       )}
     </div>

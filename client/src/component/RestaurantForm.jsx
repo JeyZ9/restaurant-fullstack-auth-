@@ -27,6 +27,7 @@ const RestaurantForm = (props) => {
     };
 
   useEffect(() => {
+    if(id != undefined){
       const getById = async (id) => {
         try {
           const response = await RestaurantService.getRestaurantById(id);
@@ -36,6 +37,7 @@ const RestaurantForm = (props) => {
         }
       };
       getById(id);
+    }
   }, [id])
 
   const handleOnClick = (action) => {
@@ -46,14 +48,12 @@ const RestaurantForm = (props) => {
           icon: "success",
           title: "Update restaurant successful!",
         });
-        navigate("/");
       }else if(action == 2){
         addRestaurant(restaurant);
         Swal.fire({
           icon: "success",
           title: "Add restaurant successful!",
         });
-        navigate("/");
       }
       getRestaurants();
       setPopup(false);
@@ -62,6 +62,7 @@ const RestaurantForm = (props) => {
         type: "",
         img: "",
       });
+      navigate("/");
     }catch(err) {
       Swal.fire({
           icon: "error",
