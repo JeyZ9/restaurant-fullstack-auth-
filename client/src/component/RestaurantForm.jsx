@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 import RestaurantService from '../services/restaurant.service';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useAuthContext } from '../context/auth.context';
 
 const RestaurantForm = (props) => {
   const { setPopup, addRestaurant, getRestaurants } = props;
@@ -12,6 +13,15 @@ const RestaurantForm = (props) => {
     type: "",
     img: ""
   });
+
+  const { user } = useAuthContext();
+
+    useEffect(() => {
+      if(user?.authorities.includes("ROLE_USER") && user?.authorities.length == 1) {
+        setPopup(false);
+        navigate("/");
+      }
+    }, [user]);
 
   const navigate = useNavigate();
 

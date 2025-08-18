@@ -1,8 +1,15 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router';
+import { useAuthContext } from '../context/auth.context';
 
 const Card = (props) => {
     const { id, title, img, type, deleteRestaurant, setPopup } = props;
+    const { user } = useAuthContext();
+    // const { role, setRole } = useState([]);
+
+    useEffect(() => {
+      console.log("USER:", user.authorities);
+    }, [user]);
 
   return (
     <>
@@ -17,20 +24,66 @@ const Card = (props) => {
           </h2>
           <p>{type}</p>
           <div className="card-actions justify-end">
-            <Link
-              to={`/delete`}
-              className="btn btn-outline btn-error"
-              onClick={() => deleteRestaurant(id)}
-            >
-              Delete
-            </Link>
-            <Link
+            {user && user.authorities.find((user) => user == "ROLE_ADMIN") ? (
+              <>
+                <Link
+                  to={`/update/${id}`}
+                  onClick={() => setPopup(true)}
+                  className="btn btn-outline btn-warning"
+                >
+                  Edit
+                </Link>
+                <Link
+                  to={`/delete`}
+                  className="btn btn-outline btn-error"
+                  onClick={() => deleteRestaurant(id)}
+                >
+                  Delete
+                </Link>
+              </>
+            ) :
+              user.authorities.find((user) => user == "ROLE_MODERATOR") ? (
+                <>
+                  <Link
+                    to={`/update/${id}`}
+                    onClick={() => setPopup(true)}
+                    className="btn btn-outline btn-warning"
+                  >
+                    Edit
+                  </Link>
+                </>
+              ):
+              (<></>)
+            }
+
+            {}
+            {/* {user.authorities == "ROLE_ADMIN" ||
+            user.authorities == "ROLE_MODERATOR" ? (
+              <Link
+                to={`/update/${id}`}
+                onClick={() => setPopup(true)}
+                className="btn btn-outline btn-warning"
+              >
+                Edit
+              </Link>
+            ) : user.authorities == "ROLE_ADMIN" ? (
+              <Link
+                to={`/delete`}
+                className="btn btn-outline btn-error"
+                onClick={() => deleteRestaurant(id)}
+              >
+                Delete
+              </Link>
+            ) : (
+              <div></div>
+            )} */}
+            {/* <Link
               to={`/update/${id}`}
               onClick={() => setPopup(true)}
               className="btn btn-outline btn-warning"
             >
               Edit
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

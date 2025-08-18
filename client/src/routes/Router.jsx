@@ -3,6 +3,8 @@ import Home from "../pages/Home";
 import App from "../App"
 import Register from "../pages/Register";
 import Login from "../pages/Login";
+import { NotAllowed } from "../pages/NotAllowed";
+import Profile from "../pages/Profile";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +30,14 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/notallowed",
+    element: <NotAllowed />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
   }
 ]);
 

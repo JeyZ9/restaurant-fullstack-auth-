@@ -2,12 +2,14 @@ import { Link } from "react-router"
 import AuthService from "../services/auth.service";
 import { useNavigate } from 'react-router-dom';
 import UserInfo from "./UserInfo"
+import { useAuthContext } from "../context/auth.context";
 
 const Navbar = (props) => {
   const { setPopup } = props;
 
 
   // const token = localStorage.getItem("token");
+  const { user } = useAuthContext();
 
   const menuItems = [
     {
@@ -78,7 +80,7 @@ const Navbar = (props) => {
           {menuItems.map((item) => (
             <ul key={item.id} className="flex gap-2">
               <li>
-                <Link to={item.url} onClick={() => handleOnClick(item.id)}>
+                <Link to={user && item.url == "/add"? item.url : "/"} onClick={() => handleOnClick(item.id)}>
                   {item.name}
                 </Link>
               </li>

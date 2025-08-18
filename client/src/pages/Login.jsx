@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import AuthService from "../services/auth.service";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 import { IoIosArrowRoundBack } from "react-icons/io";
+import { useAuthContext } from "../context/auth.context"
 
 const Login = () => {
+  const { loginUser: loginFn, user } = useAuthContext();
   const navigate = useNavigate("/");
-
   const [isShow, setIsShow] = useState({
     password: false,
   });
+
+  useEffect(() => {
+    if(user) {
+      navigate("/");
+    }
+  }, [user]);
 
   const [loginUser, setLoginUser] = useState({
     username: "",
@@ -39,24 +46,23 @@ const Login = () => {
 
         localStorage.setItem("token", login.token);
 
-        navigate("/");
-
         setLoginUser({
           username: "",
           password: "",
         });
-      // } else {
-      //   Swal.fire({
-      //     icon: "error",
-      //     title: "Login failed!",
-      //     text: "Invalid username or password",
-      //   });
+        loginFn(login);
+        // } else {
+        //   Swal.fire({
+        //     icon: "error",
+        //     title: "Login failed!",
+        //     text: "Invalid username or password",
+        //   });
       }
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Login failed!",
-        text: "Invalid username or password",
+        text: "Invalid username or password"
       });
     }
   };
