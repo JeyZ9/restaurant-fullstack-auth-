@@ -9,7 +9,7 @@ const Navbar = (props) => {
 
 
   // const token = localStorage.getItem("token");
-  const { user } = useAuthContext();
+  const { user, logout } = useAuthContext();
 
   const menuItems = [
     {
@@ -80,7 +80,10 @@ const Navbar = (props) => {
           {menuItems.map((item) => (
             <ul key={item.id} className="flex gap-2">
               <li>
-                <Link to={user && item.url == "/add"? item.url : "/"} onClick={() => handleOnClick(item.id)}>
+                <Link
+                  to={user && item.url == "/add" ? item.url : "/"}
+                  onClick={() => handleOnClick(item.id)}
+                >
                   {item.name}
                 </Link>
               </li>
@@ -88,7 +91,20 @@ const Navbar = (props) => {
           ))}
         </ul>
       </div>
-      <UserInfo />
+      {!user ? (
+        <div className="navbar-end">
+          <Link to={"/register"} className="btn btn-outline btn-primary mx-2">
+            Register
+          </Link>
+          <Link to={"/login"} className="btn btn-outline btn-accent mx-2">
+            Login
+          </Link>
+        </div>
+      ) : (
+        <div className="navbar-end">
+          <UserInfo logout={logout} />
+        </div>
+      )}
     </div>
   );
 };
