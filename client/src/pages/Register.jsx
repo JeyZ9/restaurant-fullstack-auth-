@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import AuthService from './../services/auth.service';
 import Swal from 'sweetalert2';
-
-import { useNavigate } from "react-router-dom"
+import { LuEye, LuEyeClosed } from "react-icons/lu";
+import { useNavigate, Link } from "react-router-dom";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 const Register = () => {
 
@@ -63,15 +64,19 @@ const Register = () => {
         Swal.fire({
           icon: "error",
           title: "Registration failed",
-          text: error.response?.data?.message || "An error occurred.",
+          text: error.response.data.message || "An error occurred.",
         });
       }
     };
 
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <form className="max-w-sm mx-auto" method='POST'>
+    <div className="flex items-center justify-center h-screen relative">
+      <Link to={`/`} className="top-4 absolute left-4 flex items-center">
+        <IoIosArrowRoundBack className="text-[24px]" />
+        back
+      </Link>
+      <form className="w-sm mx-auto" method="POST">
         <div className="mb-5">
           <label
             htmlFor="username"
@@ -133,26 +138,29 @@ const Register = () => {
           >
             Password
           </label>
-          <input
-            type={`${isShow.password ? "text" : "password"}`}
-            id="password"
-            name="password"
-            value={regisUser.password}
-            onChange={hanbleChange}
-            className="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-            required
-          />
-          <button
-            type="button"
-            onClick={() =>
-              setIsShow({
-                password: !isShow.password,
-                confirmPass: isShow.confirmPass,
-              })
-            }
-          >
-            {`${isShow.password ? "O" : "|"}`}
-          </button>
+          <div className="relative">
+            <input
+              type={`${isShow.password ? "text" : "password"}`}
+              id="password"
+              name="password"
+              value={regisUser.password}
+              onChange={hanbleChange}
+              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
+              required
+            />
+            <button
+              className="absolute top-1/3 right-2"
+              type="button"
+              onClick={() =>
+                setIsShow({
+                  password: !isShow.password,
+                  confirmPass: isShow.confirmPass,
+                })
+              }
+            >
+              {isShow.password ? <LuEye /> : <LuEyeClosed />}
+            </button>
+          </div>
         </div>
         <div className="mb-5">
           <label
@@ -161,26 +169,29 @@ const Register = () => {
           >
             Confirm password
           </label>
-          <input
-            type={`${isShow.confirmPass ? "text" : "password"}`}
-            id="confirmPass"
-            name='confirmPass'
-            value={regisUser.confirmPass}
-            onChange={hanbleChange}
-            className="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
-            required
-          />
-          <button
-            type="button"
-            onClick={() =>
-              setIsShow({
-                password: isShow.password,
-                confirmPass: !isShow.confirmPass,
-              })
-            }
-          >
-            {`${isShow.confirmPass ? "O" : "|"}`}
-          </button>
+          <div className="relative">
+            <input
+              type={`${isShow.confirmPass ? "text" : "password"}`}
+              id="confirmPass"
+              name="confirmPass"
+              value={regisUser.confirmPass}
+              onChange={hanbleChange}
+              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
+              required
+            />
+            <button
+              className="absolute top-1/3 right-2"
+              type="button"
+              onClick={() =>
+                setIsShow({
+                  password: isShow.password,
+                  confirmPass: !isShow.confirmPass,
+                })
+              }
+            >
+              {isShow.confirmPass ? <LuEye /> : <LuEyeClosed />}
+            </button>
+          </div>
         </div>
         <div className="flex items-start mb-5">
           <div className="flex items-center h-5">
@@ -209,7 +220,7 @@ const Register = () => {
           type="submit"
           // to={`/login`}
           onClick={(e) => handleSubmit(e)}
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           Register new account
         </button>

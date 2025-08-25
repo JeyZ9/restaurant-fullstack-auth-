@@ -4,6 +4,7 @@ import Restaurant from '../component/Restaurant';
 import RestaurantForm from '../component/RestaurantForm';
 import RestaurantService from '../services/restaurant.service';
 import Swal from "sweetalert2";
+import ModeratorOrAdminPage from "./ModeratorOrAdminPage";
 // import axios from 'axios';
 // import Card from '../component/Card'
 
@@ -117,11 +118,13 @@ const Home = () => {
 
       {popup && (
         <div className="fixed w-screen h-screen bg-[#909090]/50 z-1 left-0 top-0 flex justify-center items-center">
-          <RestaurantForm
-            setPopup={setPopup}
-            addRestaurant={addRestaurant}
-            getRestaurants={getRestaurants}
-          />
+            <ModeratorOrAdminPage>
+              <RestaurantForm
+                setPopup={setPopup}
+                addRestaurant={addRestaurant}
+                getRestaurants={getRestaurants}
+              />
+            </ModeratorOrAdminPage>
         </div>
       )}
 

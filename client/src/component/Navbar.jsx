@@ -1,13 +1,16 @@
-import React from "react";
 import { Link } from "react-router"
 import AuthService from "../services/auth.service";
 import { useNavigate } from 'react-router-dom';
+import UserInfo from "./UserInfo"
+import { useAuthContext } from "../context/auth.context";
 
 const Navbar = (props) => {
   const { setPopup } = props;
 
-  const token = localStorage.getItem("token");
-  const navigate = useNavigate();
+
+  // const token = localStorage.getItem("token");
+  const { user, logout } = useAuthContext();
+
   const menuItems = [
     {
       id: 1,
@@ -30,12 +33,6 @@ const Navbar = (props) => {
     if(String(id) === "1") {
       setPopup(true);
     }
-  }
-
-  const handleLogOut = (e) => {
-    e.preventDefault();
-    AuthService.logout();
-    navigate("/login");
   }
 
   return (
@@ -74,30 +71,38 @@ const Navbar = (props) => {
             ))}
           </ul>
         </div>
-        <a href="/" className="btn btn-ghost text-xl">Grab restaurant</a>
+        <a href="/" className="btn btn-ghost text-xl">
+          Grab restaurant
+        </a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           {menuItems.map((item) => (
             <ul key={item.id} className="flex gap-2">
               <li>
-                <button onClick={() => handleOnClick(item.id)}>
+                <Link
+                  to={user && item.url == "/add" ? item.url : "/"}
+                  onClick={() => handleOnClick(item.id)}
+                >
                   {item.name}
-                </button>
+                </Link>
               </li>
             </ul>
           ))}
         </ul>
       </div>
-      {!token ? ( 
+      {!user ? (
         <div className="navbar-end">
-          <Link to={'/register'} className="btn btn-outline btn-primary mx-2">Register</Link>
-          <Link to={'/login'} className="btn btn-outline btn-accent mx-2">Login</Link>
+          <Link to={"/register"} className="btn btn-outline btn-primary mx-2">
+            Register
+          </Link>
+          <Link to={"/login"} className="btn btn-outline btn-accent mx-2">
+            Login
+          </Link>
         </div>
-      ):
-      (
+      ) : (
         <div className="navbar-end">
-          <button onClick={(e) => handleLogOut(e)} className="btn btn-outline btn-primary mx-2">Logout</button>
+          <UserInfo logout={logout} />
         </div>
       )}
     </div>
